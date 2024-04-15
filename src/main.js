@@ -1,4 +1,6 @@
-import MainPresenter from './presenter/main-presenter.js';
+import TripPresenter from './presenter/trip-presenter.js';
+import FilterPresenter from './presenter/filter-presenter.js';
+
 import DestinationModel from './models/destination-model.js';
 import OfferModel from './models/offers-model.js';
 import PointModel from './models/point-model.js';
@@ -11,11 +13,17 @@ const destinationsModel = new DestinationModel(mockService);
 const pointsModel = new PointModel(mockService);
 const offersModel = new OfferModel(mockService);
 
-const mainPresenterElement = new MainPresenter({
-  mainContainer: bodyElement,
+const filterPresenterElement = new FilterPresenter({
+  filterContainer: bodyElement,
+  pointsModel
+});
+
+const tripPresenterElement = new TripPresenter({
+  tripContainer: bodyElement,
   destinationsModel,
   offersModel,
   pointsModel
 });
 
-mainPresenterElement.init();
+filterPresenterElement.init();
+tripPresenterElement.init();
