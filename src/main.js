@@ -1,5 +1,4 @@
 import MainPresenter from './presenter/main-presenter.js';
-
 import DestinationModel from './models/destination-model.js';
 import OfferModel from './models/offers-model.js';
 import PointModel from './models/point-model.js';
