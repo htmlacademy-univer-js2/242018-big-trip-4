@@ -5,6 +5,7 @@ import DestinationModel from './models/destination-model.js';
 import OfferModel from './models/offers-model.js';
 import PointModel from './models/point-model.js';
 import FilterModel from './models/filter-model.js';
+// import FilterPresenter from './presenter/filter-presenter.js';
 
 import PointApiService from '../src/services/point-api-service.js';
 
@@ -29,6 +30,12 @@ const pointsModel = new PointModel({
 const newPointButtonPresenter = new NewPointButtonPresenter({
   container: tripInfoElement
 });
+
+// const filterPresenter = new FilterPresenter({
+//   container: bodyElement.querySelector('.trip-control__filters'),
+//   pointsModel,
+//   filterModel
+// });
 
 const boardPresenter = new BoardPresenter({
   tripContainer: bodyElement,
