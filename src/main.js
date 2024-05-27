@@ -31,11 +31,6 @@ const newPointButtonPresenter = new NewPointButtonPresenter({
   container: tripInfoElement
 });
 
-// const filterPresenter = new FilterPresenter({
-//   container: bodyElement.querySelector('.trip-control__filters'),
-//   pointsModel,
-//   filterModel
-// });
 
 const boardPresenter = new BoardPresenter({
   tripContainer: bodyElement,
