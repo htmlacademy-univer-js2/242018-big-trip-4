@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {POINT_EMPTY, CITIES, ROUTE_TYPE} from '../mock/const.js';
+import {POINT_EMPTY, CITIES, ROUTE_TYPE} from '../const.js';
 
 const getDestinationItem = (city) => `<option value="${city}"></option>`;
 

@@ -1,5 +1,5 @@
 import {getRandomArrayElement, getRandomInt} from '../lib/util.js';
-import {OFFERS} from './const.js';
+import {OFFERS} from '../const.js';
 
 
 export const generateOffer = () => ({

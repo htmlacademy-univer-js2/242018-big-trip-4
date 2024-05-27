@@ -1,4 +1,4 @@
-import {POINT_EMPTY} from '../mock/const.js';
+import {POINT_EMPTY} from '../const.js';
 import {formatToShortDate, formatToDay} from '../lib/util.js';
 import AbstractView from '../framework/view/abstract-view.js';
 import dayjs from 'dayjs';

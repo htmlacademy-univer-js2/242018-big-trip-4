@@ -1,5 +1,5 @@
 import {getRandomArrayElement, getPicturesArray} from '../lib/util.js';
-import {CITIES, DESCRIPTION} from './const.js';
+import {CITIES, DESCRIPTION} from '../const.js';
 
 export const generateDestination = (index) => {
   const city = CITIES[index];

@@ -6,7 +6,7 @@ import SortView from '../view/sort-view.js';
 import PointPresenter from './point-presenter.js';
 import TripInfoView from '../view/trip-info-view.js';
 import {updateItem, sortPointDay, sortPointPrice, sortPointTime} from '../lib/util.js';
-import {SortType} from '../mock/const.js';
+import {SortType} from '../const.js';
 import FilterPresenter from './filter-presenter.js';
 
 export default class TripPresenter {

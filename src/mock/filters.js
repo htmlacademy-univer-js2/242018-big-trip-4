@@ -1,4 +1,4 @@
-import {FilterType} from './const.js';
+import {FilterType} from '../const.js';
 import {ispointExpired} from '../lib/util.js';
 
 const filter = {
