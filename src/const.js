@@ -1,85 +1,77 @@
-export const DATE_FORMAT = 'MMM D';
-export const TIME_FORMAT = 'HH:mm';
-export const DAY_FOMAT = 'D';
-export const FULL_TIME_FOMAT = 'YYYY-MM-DDTHH:mm';
-export const SLASH_TIME_FOMAT = 'DD/MM/YY HH:mm';
-export const MILLISECONDS_IN_DAY = 86400000;
-export const MILLISECONDS_IN_HOUR = 3600000;
+const DEFAULT_TYPE = 'flight';
+const DESTINATION_ITEMS_LENGTH = 3;
 
-export const BooleanValues = [
-  true,
-  false
-];
-
-export const MODE = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING'
-};
-
-export const POINT_EMPTY = {
-  id: crypto.randomUUID(),
-  basePrice: 0,
+const EVENT_TEMPLATE = {
+  type: DEFAULT_TYPE,
+  price: 0,
   dateFrom: null,
   dateTo: null,
+  isFavorite: false,
   destination: null,
-  ifFavorite: false,
-  offers: [],
-  type: 'Flight',
+  offers: []
 };
 
-export const ROUTE_TYPE = [
-  'taxi',
-  'bus',
-  'train',
-  'ship',
-  'drive',
-  'flight',
-  'check-in',
-  'sightseeing',
-  'restaurant'
-];
-
-export const FilterType = {
-  EVERYTHING: 'EVERYTHING',
-  FUTURE: 'FUTURE',
-  PRESENT: 'PRESENT',
-  PAST: 'PAST'
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past',
 };
 
-export const SortType = {
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
+const SortType = {
   DAY: 'day',
   EVENT: 'event',
   TIME: 'time',
   PRICE: 'price',
-  OFFERS: 'offers'
+  OFFER: 'offer',
 };
 
-export const EmptyListMessage = {
-  EVERYTHING: '<p class="trip-events__msg">Click New Event to create your first point</p>',
-  FUTURE: '<p class="trip-events__msg">There are no past events now</p>',
-  PRESENT: '<p class="trip-events__msg">There are no present events now</p>',
-  PAST: '<p class="trip-events__msg">There are no future events now</p>'
+const UserAction = {
+  UPDATE_EVENT: 'UPDATE_EVENT',
+  ADD_EVENT: 'ADD_EVENT',
+  DELETE_EVENT: 'DELETE_EVENT',
 };
 
-export const UserAction = {
-  UPDATE_POINT: 'UPDATE_POINT',
-  CREATE_POINT: 'CREATE_POINT',
-  DELETE_POINT: 'DELETE_POINT',
-};
-
-export const UpdateType = {
+const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
-  INIT: 'INIT'
+  INIT: 'INIT',
 };
 
-export const EditType = {
-  CREATING: 'CREATING',
-  EDITING: 'EDITING'
+const EditType = {
+  EDITING: 'EDITING',
+  CREATING: 'CREATING'
 };
 
-export const TimeLimit = {
+const ButtonLabel = {
+  CANCEL_DEFAULT: 'Cancel',
+  DELETE_DEFAULT: 'Delete',
+  SAVE_DEFAULT: 'Save',
+  SAVE_IN_PROGRESS: 'Saving...',
+  DELETE_IN_PROGRESS: 'Deleting...',
+};
+
+// Time Limits
+const TimeLimit = {
   LOWER_LIMIT: 350,
-  UPPER_LIMIT: 1000
+  UPPER_LIMIT: 1000,
+};
+
+export {
+  EVENT_TEMPLATE,
+  FilterType,
+  Mode,
+  SortType,
+  UserAction,
+  UpdateType,
+  EditType,
+  ButtonLabel,
+  TimeLimit,
+  DESTINATION_ITEMS_LENGTH
 };
