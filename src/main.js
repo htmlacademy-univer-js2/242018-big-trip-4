@@ -7,7 +7,7 @@ import PointModel from './models/point-model.js';
 import FilterModel from './models/filter-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 
-import PointApiService from '../src/services/point-api-service.js';
+import BigTripApiService from './services/big-trip-api-service.js';
 
 const AUTHORIZATION = 'Basic 74fnvhvfd343fddfg';
 const END_POINT = 'https://21.objects.htmlacademy.pro/big-trip';
@@ -18,7 +18,7 @@ const tripInfoElement = bodyElement.querySelector('.trip-main');
 const filterModel = new FilterModel();
 
 
-const pointApiService = new PointApiService(END_POINT, AUTHORIZATION);
+const pointApiService = new BigTripApiService(END_POINT, AUTHORIZATION);
 const destinationsModel = new DestinationModel(pointApiService);
 const offersModel = new OfferModel(pointApiService);
 const pointsModel = new PointModel({

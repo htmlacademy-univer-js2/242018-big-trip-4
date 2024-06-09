@@ -57,7 +57,13 @@ const ButtonLabel = {
   DELETE_IN_PROGRESS: 'Deleting...',
 };
 
-// Time Limits
+const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
+};
+
 const TimeLimit = {
   LOWER_LIMIT: 350,
   UPPER_LIMIT: 1000,
@@ -72,6 +78,7 @@ export {
   UpdateType,
   EditType,
   ButtonLabel,
+  Method,
   TimeLimit,
   DESTINATION_ITEMS_LENGTH
 };
