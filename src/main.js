@@ -3,7 +3,7 @@ import NewPointButtonPresenter from './presenter/new-point-button-presenter.js';
 
 import DestinationModel from './models/destination-model.js';
 import OfferModel from './models/offers-model.js';
-import PointModel from './models/point-model.js';
+import OffersModel from './models/events-model.js';
 import FilterModel from './models/filter-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 
@@ -21,7 +21,7 @@ const filterModel = new FilterModel();
 const pointApiService = new BigTripApiService(END_POINT, AUTHORIZATION);
 const destinationsModel = new DestinationModel(pointApiService);
 const offersModel = new OfferModel(pointApiService);
-const pointsModel = new PointModel({
+const pointsModel = new OffersModel({
   service: pointApiService,
   destinationsModel,
   offersModel
