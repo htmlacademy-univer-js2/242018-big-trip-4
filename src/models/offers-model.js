@@ -16,6 +16,6 @@ export default class OfferModel {
   }
 
   getByType(type) {
-    return this.get().find((offer) => offer.type === type).offers;
+    return this.get().find((offer) => offer.type === type.toLowerCase()).offers;
   }
 }

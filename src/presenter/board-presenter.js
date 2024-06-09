@@ -6,8 +6,6 @@ import FilterView from '../view/filter-view.js';
 import TripInfoView from '../view/trip-info-view.js';
 import {sortPointDay, sortPointPrice, sortPointTime} from '../lib/util.js';
 import {FilterType, SortType, UpdateType, UserAction, TimeLimit} from '../const.js';
-// import {FilterType} from '../model/filter-model.js';
-// import NewPointButtonPresenter from '../presenter/new-point-button-presenter.js';
 import NewPointPresenter from '../presenter/new-point-presenter.js';
 import MessageView from '../view/message-view.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
@@ -31,7 +29,6 @@ export default class BoardPresenter {
 
   #currentSortType = SortType.DAY;
   #currentFilteType = FilterType.EVERYTHING;
-  #sourcedTripPoints = [];
   #isCreating = false;
 
   #sortComponent = null;
@@ -48,9 +45,9 @@ export default class BoardPresenter {
   #isLoading = false;
 
   constructor({tripContainer, destinationsModel,
-                offersModel, pointsModel, filterModel,
-                newPointButtonPresenter
-              }) {
+    offersModel, pointsModel, filterModel,
+    newPointButtonPresenter
+  }) {
     this.#tripContainer = tripContainer;
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
@@ -274,11 +271,6 @@ export default class BoardPresenter {
     this.#pointPresenterArray.forEach((presenter) => presenter.resetView());
     this.#newPointPresenter.destroy();
   };
-
-  // #filterPoints = (filterType) => {
-  //   filter[filterType](this.#pointsModel.points);
-  //   console.log(filter[filterType](this.#pointsModel.points));
-  // };
 
   #sortPoints = (sortType) => {
     switch (sortType) {

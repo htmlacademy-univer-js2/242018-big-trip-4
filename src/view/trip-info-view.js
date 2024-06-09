@@ -1,35 +1,66 @@
+import {POINT_EMPTY} from '../const.js';
+import {formatToShortDate, formatToDay} from '../lib/util';
 import AbstractView from '../framework/view/abstract-view.js';
+import dayjs from 'dayjs';
 
-const createFilterItems = (filter, flag) => (`<div class="trip-filters__filter">
-  <input id="filter-${filter.toLowerCase()}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filter.toLowerCase()}"
-  ${flag === 0 ? 'checked' : ''}>
-  <label class="trip-filters__filter-label" for="filter-${filter.toLowerCase()}">${filter}</label>
-</div>`);
+const getOffersCoast = (offersIds = [], offers = []) => offersIds.reduce(
+  (result, id) => result + (offers.find((offer) => offer.id === id)?.price ?? 0),
+  0
+);
 
-const createFilterTemplate = (filters) => (`<form class="trip-filters" action="#" method="get">
-      ${filters.map((filter, index) => createFilterItems(filter, index)).join('')}
-      <button class="visually-hidden" type="submit">Accept filter</button>
-    </form>`);
+const getTripCost = (points = [], offers = []) => points.reduce(
+  (result, point) => result + point.basePrice + getOffersCoast(point.offers, offers.find((offer) => point.type === offer.type)?.offers),
+  0
+);
 
-export default class FilterView extends AbstractView{
-  #filters = null;
-  #handleFilterTypeChange = null;
+const findDestinationForPoint = (point, pointDestination) =>
+  pointDestination.find((destination) => destination.id === point.destination);
 
-  constructor({filters, onFilterTypeChange}) {
+const createDestinationElement = (destinations) =>
+  destinations.length <= 3
+    ? destinations.map((destination) => (`${destination} - `)).join('').slice(0, -2)
+    : `${destinations[0]} - ... - ${destinations[destinations.length - 1]}`;
+
+const createTripInfoTemplate = ({points, destination, isEmpty, cost}) =>
+  (`${!isEmpty
+    ? `<section class="trip-main__trip-info  trip-info">
+    <div class="trip-info__main">
+      <h1 class="trip-info__title">${createDestinationElement(destination)}</h1>
+
+      <p class="trip-info__dates">${formatToShortDate(points[0].dateFrom)}&nbsp;—&nbsp;
+      ${dayjs(points[points.length - 1].dateTo).month() === dayjs(points[0].dateFrom).month()
+      ? formatToDay(points[points.length - 1].dateTo)
+      : formatToShortDate(points[points.length - 1].dateTo)}</p>
+    </div>
+
+    <p class="trip-info__cost">
+      Total: €&nbsp;<span class="trip-info__cost-value">
+      ${cost}</span>
+    </p>
+    </section>`
+    : ''
+  }`);
+
+export default class TripInfoView extends AbstractView {
+  #points = 0;
+  #destination = [];
+  #offers = [];
+
+  constructor({points = POINT_EMPTY, destinations, offers}) {
     super();
-    this.#filters = Object.values(filters);
-    this.#handleFilterTypeChange = onFilterTypeChange;
-
-    this.element.querySelectorAll('.trip-filters__filter')
-      .forEach((filterElement) => filterElement.addEventListener('click', this.#filterClickHandler));
+    this.#points = points;
+    this.#offers = offers;
+    this.#destination = points
+      .map((point) => findDestinationForPoint(point, destinations))
+      .map((destination) => destination.name);
   }
 
   get template() {
-    return createFilterTemplate(this.#filters);
+    return createTripInfoTemplate({
+      points: this.#points,
+      destination: this.#destination,
+      isEmpty: this.#points.length === 0,
+      cost: getTripCost(this.#points, this.#offers)
+    });
   }
-
-  #filterClickHandler = (evt) => {
-    // evt.preventDefault();
-    this.#handleFilterTypeChange(evt.target.innerHTML);
-  };
 }

@@ -2,12 +2,22 @@ import dayjs from 'dayjs';
 import {DAY_FOMAT, DATE_FORMAT, TIME_FORMAT,
   FULL_TIME_FOMAT, MILLISECONDS_IN_DAY, MILLISECONDS_IN_HOUR,
   BooleanValues, SLASH_TIME_FOMAT} from '../const';
-// import {FilterType} from './model/filter-model.js';
+import {FilterType} from '../models/filter-model.js';
 
 // eslint-disable-next-line no-undef
 const duration = require('dayjs/plugin/duration');
 dayjs.extend(duration);
 
+const isPointFuture = (point) => dayjs(point.dateFrom).diff(dayjs()) > 0;
+const isPointPresent = (point) => dayjs(point.dateFrom).diff(dayjs()) <= 0 && dayjs(point.dateTo).diff(dayjs()) >= 0;
+const isPointPast = (point) => dayjs(point.dateTo).diff(dayjs()) < 0;
+
+export const filter = {
+  [FilterType.EVERYTHING]: (points) => points.filter((point) => point),
+  [FilterType.FUTURE]: (points) => points.filter((point) => isPointFuture(point)),
+  [FilterType.PRESENT]: (points) => points.filter((point) => isPointPresent(point)),
+  [FilterType.PAST]: (points) => points.filter((point) => isPointPast(point))
+};
 export const formatToDate = (dueDate) => dueDate ? dayjs(dueDate).format(FULL_TIME_FOMAT) : '';
 
 export const formatToDay = (dueDate) => dueDate ? dayjs(dueDate).format(DAY_FOMAT) : '';
@@ -88,20 +98,6 @@ export const isBigDifference = (pointA, pointB) =>
   || pointA.basePrice !== pointB.basePrice
   || dayjs(pointA.dateTo).diff(dayjs(pointA.dateFrom)) !== dayjs(pointB.dateTo).diff(dayjs(pointB.dateFrom));
 
-// const isPointFuture = (point) => dayjs(point.dateFrom).diff(dayjs(new Date())) > 0;
-// const isPointPresent = (point) => dayjs(point.dateFrom).diff(dayjs(new Date())) > 0;
-// const isPointPast = (point) => dayjs(point.dateTo).diff(dayjs(new Date())) < 0;
-
-// export const filter = {
-//   [FilterType.EVERYTHING]: (points) => console.log(points),
-//   // points.filter((point) => point),
-//   [FilterType.FUTURE]:(points) => console.log(points),
-//   // points.filter((point) => !ispointExpired(point.dateFrom) && !ispointExpired(point.dateTo)),
-//   [FilterType.PRESENT]:(points) => console.log(points),
-//   // points.filter((point) => ispointExpired(point.dateFrom) && !ispointExpired(point.dateTo)),
-//   [FilterType.PAST]: (points) => console.log(points),
-//   // points.filter((point) => ispointExpired(point.dateFrom) && ispointExpired(point.dateTo))
-// };
 
 export const adaptToClient = (point) => {
   const adaptedPoint = {

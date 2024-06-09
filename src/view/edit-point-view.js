@@ -41,7 +41,6 @@ const createEditPointTemplate = ({state, pointDestinations, pointOffers, type}) 
     .map((point) => point.name)
     .map((cityItem) => getDestinationItem(cityItem, isDisabled)).join('');
   const offerItemsTemplate = pointOffers.map((offer) => getOfferItem(offer, offers, isDisabled)).join('');
-
   return `<li class="trip-events__item">
 <form class="event event--edit" action="#" method="post">
   <header class="event__header">
@@ -108,7 +107,7 @@ const createEditPointTemplate = ({state, pointDestinations, pointOffers, type}) 
   </section>`
     : ''}
     <section class="event__section  event__section--destination">
-    ${pointDestination.description !== ''
+   ${pointDestination && pointDestination.description !== ''
     ? `<h3 class="event__section-title  event__section-title--destination">Destination</h3>
       <p class="event__destination-description">${pointDestination.description}</p>`
     : ''}
@@ -140,7 +139,7 @@ export default class EditPointView extends AbstractStatefulView{
   #type;
 
   constructor({point = POINT_EMPTY, pointDestination, pointOffers,
-                onSubmitClick, onDeleteClick, onResetClick, onCancelClick, type = EditType.EDITING}) {
+    onSubmitClick, onDeleteClick, onResetClick, onCancelClick, type = EditType.EDITING}) {
     super();
     this.#destinations = pointDestination;
     this.#pointDestination = pointDestination.getById(point.destination);
