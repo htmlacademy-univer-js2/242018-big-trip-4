@@ -1,49 +1,64 @@
-import BoardPresenter from './presenter/board-presenter.js';
-import NewPointButtonPresenter from './presenter/new-point-button-presenter.js';
-
-import DestinationModel from './models/destination-model.js';
-import OfferModel from './models/offers-model.js';
-import OffersModel from './models/events-model.js';
-import FilterModel from './models/filter-model.js';
+import NewEventButtonView from './view/new-event-view.js';
+import { render, RenderPosition } from './framework/render.js';
+import TripPresenter from './presenter/trip-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
+import EventsApiService from './services/big-trip-api-service.js';
+import DestinationsModel from './models/destination-model.js';
+import OffersModel from './models/offers-model.js';
+import EventsModel from './models/events-model.js';
+import FilterModel from './models/filter-model.js';
 
-import BigTripApiService from './services/big-trip-api-service.js';
+const AUTHORIZATION = 'Basic 74fnvhvfd343fddgfdfg';
+const END_EVENT = 'https://21.objects.htmlacademy.pro/big-trip';
 
-const AUTHORIZATION = 'Basic 74fnvhvfd343fddfg';
-const END_POINT = 'https://21.objects.htmlacademy.pro/big-trip';
-
-const bodyElement = document.querySelector('body');
-const tripInfoElement = bodyElement.querySelector('.trip-main');
-
+const tripMainContainer = document.querySelector('.trip-main');
+const filterContainer = document.querySelector('.trip-controls__filters');
+const tripEventsContainer = document.querySelector('.trip-events');
+const eventsApiService = new EventsApiService(END_EVENT, AUTHORIZATION);
 const filterModel = new FilterModel();
-
-
-const pointApiService = new BigTripApiService(END_POINT, AUTHORIZATION);
-const destinationsModel = new DestinationModel(pointApiService);
-const offersModel = new OfferModel(pointApiService);
-const pointsModel = new OffersModel({
-  service: pointApiService,
+const destinationsModel = new DestinationsModel(eventsApiService);
+const offersModel = new OffersModel(eventsApiService);
+const eventsModel = new EventsModel({
+  eventsApiService,
   destinationsModel,
   offersModel
 });
 
-const newPointButtonPresenter = new NewPointButtonPresenter({
-  container: tripInfoElement
+const newEventButtonComponent = new NewEventButtonView({
+  onClick: handleNewEventButtonClick
 });
 
-const boardPresenter = new BoardPresenter({
-  tripContainer: bodyElement,
+function handleNewEventClick() {
+  newEventButtonComponent.element.disabled = true;
+}
+
+const routePresenter = new TripPresenter({
+  tripInfoContainer: tripMainContainer,
+  tripEventsContainer,
   destinationsModel,
   offersModel,
-  pointsModel,
+  eventsModel,
   filterModel,
-  newPointButtonPresenter: newPointButtonPresenter
+  onNewEventDestroy: handleNewEventFormClose,
+  onNewEventClick: handleNewEventClick,
 });
 
-newPointButtonPresenter.init({
-  onButtonClick: boardPresenter.newPointButtonClickHandler
+const filterPresenter = new FilterPresenter({
+  filterContainer: filterContainer,
+  filterModel,
+  eventsModel
 });
 
-pointsModel.init();
-boardPresenter.init();
+function handleNewEventFormClose() {
+  newEventButtonComponent.element.disabled = false;
+}
 
+function handleNewEventButtonClick() {
+  routePresenter.createEvent();
+  handleNewEventClick();
+}
+
+render(newEventButtonComponent, tripMainContainer, RenderPosition.BEFOREEND);
+filterPresenter.init();
+routePresenter.init();
+eventsModel.init();

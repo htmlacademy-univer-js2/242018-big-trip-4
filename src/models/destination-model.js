@@ -8,7 +8,7 @@ export default class DestinationModel {
 
   // Инициализация модели и загрузка направлений с сервера
   async init() {
-    this.#destinations = await this.#bigTripApiService.destinations();
+    this.#destinations = await this.#bigTripApiService.destinations;
 
     return this.#destinations;
   }

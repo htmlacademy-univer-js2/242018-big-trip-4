@@ -7,7 +7,7 @@ export default class OffersModel {
   }
 
   async init() {
-    this.#offers = await this.#bigTripApiService.offers();
+    this.#offers = await this.#bigTripApiService.offers;
     return this.#offers;
   }
 

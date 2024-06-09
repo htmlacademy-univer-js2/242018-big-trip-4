@@ -1,35 +1,62 @@
 import AbstractView from '../framework/view/abstract-view.js';
+import { firstLetterToUpperCase } from '../utils/base.js';
 
-const createFilterItems = (filter, flag) => (`<div class="trip-filters__filter">
-  <input id="filter-${filter.toLowerCase()}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filter.toLowerCase()}"
-  ${flag === 0 ? 'checked' : ''}>
-  <label class="trip-filters__filter-label" for="filter-${filter.toLowerCase()}">${filter}</label>
-</div>`);
-
-const createFilterTemplate = (filters) => (`<form class="trip-filters" action="#" method="get">
-      ${filters.map((filter, index) => createFilterItems(filter, index)).join('')}
-      <button class="visually-hidden" type="submit">Accept filter</button>
-    </form>`);
-
-export default class FilterView extends AbstractView{
-  #filters = null;
+export default class FilterView extends AbstractView {
+  #filters = [];
+  #currentFilter = null;
   #handleFilterTypeChange = null;
-
-  constructor({filters, onFilterTypeChange}) {
+  constructor({ filters, currentFilterType, onFilterTypeChange }) {
     super();
-    this.#filters = Object.values(filters);
+    this.#filters = filters;
+    this.#currentFilter = currentFilterType;
     this.#handleFilterTypeChange = onFilterTypeChange;
 
-    this.element.querySelectorAll('.trip-filters__filter')
-      .forEach((filterElement) => filterElement.addEventListener('click', this.#filterClickHandler));
+    this.element.addEventListener('change', this.#onFilterChange);
   }
 
   get template() {
-    return createFilterTemplate(this.#filters);
+    return this.#createFiltersForm(this.#filters, this.#currentFilter);
   }
 
-  #filterClickHandler = (evt) => {
-    // evt.preventDefault();
-    this.#handleFilterTypeChange(evt.target.innerHTML);
+  #createFilterItemTemplate(filter, currentFilter) {
+    const { type, exists } = filter;
+    return `
+      <div class="trip-filters__filter">
+        <input
+          id="filter-${type}"
+          class="trip-filters__filter-input visually-hidden"
+          type="radio"
+          name="trip-filter"
+          value="${type}"
+          ${currentFilter === type ? 'checked' : ''}
+          ${exists ? '' : 'disabled'}
+        >
+        <label class="trip-filters__filter-label" for="filter-${type}">
+          ${firstLetterToUpperCase(type)}
+        </label>
+      </div>`;
+  }
+
+  #createFiltersForm(filters, currentFilter) {
+    const filterItemsTemplate = filters
+      .map((filter) => this.#createFilterItemTemplate(filter, currentFilter))
+      .join('');
+
+    return `
+      <form class="trip-filters" action="#" method="get">
+        ${filterItemsTemplate}
+        <button class="visually-hidden" type="submit">Accept filter</button>
+      </form>`;
+  }
+
+  #onFilterChange = (evt) => {
+    evt.preventDefault();
+    if (evt.target.name === 'trip-filter') {
+      if(!this.#handleFilterTypeChange){
+        throw new Error('this.#handleFilterTypeChange isn\'t implemented ');
+      }else{
+        this.#handleFilterTypeChange(evt.target.value);
+      }
+    }
   };
 }
