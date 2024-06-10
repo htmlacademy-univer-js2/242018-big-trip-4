@@ -1,13 +1,24 @@
-export default class OfferModel {
+export default class OffersModel {
+  #bigTripApiService = null;
+  #offers = null;
+
   constructor(service){
-    this.offers = service.getOffers();
+    this.#bigTripApiService = service;
+  }
+
+  async init() {
+    this.#offers = await this.#bigTripApiService.offers;
+    return this.#offers;
   }
 
   get() {
-    return this.offers;
+    return this.#offers;
   }
 
   getByType(type) {
-    return this.offers.find((offers) => offers.type === type).offers;
+    return this.#offers
+      .find(
+        (offer) => offer.type === type
+      );
   }
 }

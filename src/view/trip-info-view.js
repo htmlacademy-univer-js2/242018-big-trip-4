@@ -1,43 +1,51 @@
-import {POINT_EMPTY} from '../mock/const.js';
-import {formatToShortDate, formatToDay} from '../lib/util.js';
+// Importing the abstract view base class and utility functions for trip info processing
 import AbstractView from '../framework/view/abstract-view.js';
+import {
+  getTripTitle,
+  getTripDuration,
+  getTripCost
+} from '../utils/trip-data-helpers.js';
 
-const createDestinationElement = (pointDestination) => {
-  let destinationElements = '';
+// Function to create HTML template for trip information
+function createTripInfoTemplate({ isEmpty, title, duration, cost }) {
+  if (isEmpty) {
+    return '<div></div>';
+  } else {
+    return `
+      <section class="trip-main__trip-info trip-info">
+        <div class="trip-info__main">
+          <h1 class="trip-info__title">${title}</h1>
+          <p class="trip-info__dates">${duration}</p>
+        </div>
+        <p class="trip-info__cost">
+          Total: &euro;&nbsp;<span class="trip-info__cost-value">${cost}</span>
+        </p>
+      </section>`;
+  }
+}
 
-  pointDestination.forEach((destination) => {
-    destinationElements += `${destination} - `;
-  });
-
-  return destinationElements.slice(0, -2);
-};
-
-const createTripInfoTemplate = ({point, pointDestination}) => (`<section class="trip-main__trip-info  trip-info">
-    <div class="trip-info__main">
-      <h1 class="trip-info__title">${createDestinationElement(pointDestination)}</h1>
-
-      <p class="trip-info__dates">${formatToShortDate(point[0].dateFrom)}&nbsp;—&nbsp;${formatToDay(point[point.length - 1].dateTo)}</p>
-    </div>
-
-    <p class="trip-info__cost">
-      Total: €&nbsp;<span class="trip-info__cost-value">1230</span>
-    </p>
-    </section>`);
-
+// Class definition for TripInfoView that extends AbstractView
 export default class TripInfoView extends AbstractView {
-  #point = null;
-  #pointDestination = [];
+  #destinations;
+  #offers;
+  #events;
 
-  constructor({point = POINT_EMPTY, pointDestination}) {
+  constructor({ destinations, offers, events }) {
     super();
-    this.#point = point;
-    this.#pointDestination = pointDestination;
+    this.#destinations = destinations;
+    this.#offers = offers;
+    this.#events = events;
   }
 
+  // Getter for the template that uses the createTripInfoTemplate function
   get template() {
-    return createTripInfoTemplate({
-      point: this.#point,
-      pointDestination: this.#pointDestination,
-    });
+    const tripInfo = {
+      isEmpty: this.#events.length === 0,
+      title: getTripTitle(this.#events, this.#destinations),
+      duration: getTripDuration(this.#events),
+      cost: getTripCost(this.#events, this.#offers)
+    };
+
+    return createTripInfoTemplate(tripInfo);
   }
 }
