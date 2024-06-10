@@ -1,35 +1,51 @@
+// Importing the abstract view base class and utility functions for trip info processing
 import AbstractView from '../framework/view/abstract-view.js';
+import {
+  getTripTitle,
+  getTripDuration,
+  getTripCost
+} from '../utils/trip-data-helpers.js';
 
-const createFilterItems = (filter, flag) => (`<div class="trip-filters__filter">
-  <input id="filter-${filter.toLowerCase()}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filter.toLowerCase()}"
-  ${flag === 0 ? 'checked' : ''}>
-  <label class="trip-filters__filter-label" for="filter-${filter.toLowerCase()}">${filter}</label>
-</div>`);
+// Function to create HTML template for trip information
+function createTripInfoTemplate({ isEmpty, title, duration, cost }) {
+  if (isEmpty) {
+    return '<div></div>';
+  } else {
+    return `
+      <section class="trip-main__trip-info trip-info">
+        <div class="trip-info__main">
+          <h1 class="trip-info__title">${title}</h1>
+          <p class="trip-info__dates">${duration}</p>
+        </div>
+        <p class="trip-info__cost">
+          Total: &euro;&nbsp;<span class="trip-info__cost-value">${cost}</span>
+        </p>
+      </section>`;
+  }
+}
 
-const createFilterTemplate = (filters) => (`<form class="trip-filters" action="#" method="get">
-      ${filters.map((filter, index) => createFilterItems(filter, index)).join('')}
-      <button class="visually-hidden" type="submit">Accept filter</button>
-    </form>`);
+// Class definition for TripInfoView that extends AbstractView
+export default class TripInfoView extends AbstractView {
+  #destinations;
+  #offers;
+  #events;
 
-export default class FilterView extends AbstractView{
-  #filters = null;
-  #handleFilterTypeChange = null;
-
-  constructor({filters, onFilterTypeChange}) {
+  constructor({ destinations, offers, events }) {
     super();
-    this.#filters = Object.values(filters);
-    this.#handleFilterTypeChange = onFilterTypeChange;
-
-    this.element.querySelectorAll('.trip-filters__filter')
-      .forEach((filterElement) => filterElement.addEventListener('click', this.#filterClickHandler));
+    this.#destinations = destinations;
+    this.#offers = offers;
+    this.#events = events;
   }
 
+  // Getter for the template that uses the createTripInfoTemplate function
   get template() {
-    return createFilterTemplate(this.#filters);
-  }
+    const tripInfo = {
+      isEmpty: this.#events.length === 0,
+      title: getTripTitle(this.#events, this.#destinations),
+      duration: getTripDuration(this.#events),
+      cost: getTripCost(this.#events, this.#offers)
+    };
 
-  #filterClickHandler = (evt) => {
-    // evt.preventDefault();
-    this.#handleFilterTypeChange(evt.target.innerHTML);
-  };
+    return createTripInfoTemplate(tripInfo);
+  }
 }

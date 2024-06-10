@@ -1,13 +1,13 @@
-export default class OfferModel {
+export default class OffersModel {
+  #bigTripApiService = null;
   #offers = null;
-  #service = null;
 
   constructor(service){
-    this.#service = service;
+    this.#bigTripApiService = service;
   }
 
   async init() {
-    this.#offers = await this.#service.getOffers();
+    this.#offers = await this.#bigTripApiService.offers;
     return this.#offers;
   }
 
@@ -16,6 +16,9 @@ export default class OfferModel {
   }
 
   getByType(type) {
-    return this.get().find((offer) => offer.type === type).offers;
+    return this.#offers
+      .find(
+        (offer) => offer.type === type
+      );
   }
 }

@@ -1,25 +1,31 @@
-import AbstractView from '../framework/view/abstract-view';
-import {FilterType} from '../const.js';
+import AbstractView from '../framework/view/abstract-view.js';
+import { NoEventsTextType } from '../utils/filter.js';
 
-const FilterMassege = {
-  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
-  [FilterType.FUTURE]: 'There are no future events now',
-  [FilterType.PRESENT]: 'There are no preset events now',
-  [FilterType.PAST]: 'There are no past events now'
+const createMessageTemplate = (filterType, isLoading, isLoadingError) => {
+  if (isLoading) {
+    return '<p class="trip-events__msg">Loading...</p>';
+  }
+
+  if (isLoadingError) {
+    return '<p class="trip-events__msg">Failed to load latest route information</p>';
+  }
+
+  return `<p class="trip-events__msg">${NoEventsTextType[filterType]}</p>`;
 };
 
-const createMessageTemplate = (message) => `<p class="trip-events__msg">${message}</p>`;
-
 export default class MessageView extends AbstractView {
-  #filterType;
+  #filterType = null;
+  #isLoading = false;
+  #isLoadingError = false;
 
-  constructor({filterType}) {
+  constructor({ filterType, isLoading = false, isLoadingError = false }) {
     super();
     this.#filterType = filterType;
+    this.#isLoading = isLoading;
+    this.#isLoadingError = isLoadingError;
   }
 
   get template() {
-    const message = FilterMassege[this.#filterType];
-    return createMessageTemplate(message);
+    return createMessageTemplate(this.#filterType, this.#isLoading, this.#isLoadingError);
   }
 }

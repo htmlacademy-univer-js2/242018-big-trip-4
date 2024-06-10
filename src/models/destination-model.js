@@ -1,25 +1,28 @@
 export default class DestinationModel {
+  #bigTripApiService = null;
   #destinations = null;
-  #service = null;
 
-  constructor(service){
-    this.#service = service;
+  constructor(service) {
+    this.#bigTripApiService = service;
   }
 
+  // Инициализация модели и загрузка направлений с сервера
   async init() {
-    this.#destinations = await this.#service.getDestinations();
+    this.#destinations = await this.#bigTripApiService.destinations;
+
     return this.#destinations;
   }
 
+  // Получить все направления
   get() {
     return this.#destinations;
   }
 
+  // Получить направление по идентификатору
   getById(id) {
-    return this.get().find((destination) => destination.id === id);
-  }
-
-  getByName(name) {
-    return this.get().find((destination) => destination.name === name);
+    return this.get()
+      .find(
+        (destination) => destination.id === id
+      );
   }
 }
