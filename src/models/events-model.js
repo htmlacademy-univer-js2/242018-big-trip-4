@@ -3,78 +3,73 @@ import EventAdapter from '../utils/event-adapter';
 import { UpdateType } from '../const.js';
 
 export default class EventsModel extends Observable {
-  #bigTripApiService = null;
-  #destinationsModel = null;
-  #offersModel = null;
+  #eventsApiService;
+  #destinationsModel;
+  #offersModel;
   #events = [];
 
-  constructor({
-    bigTripApiService,
-    destinationsModel,
-    offersModel
-  }) {
+  constructor({ eventsApiService, destinationsModel, offersModel }) {
     super();
-    this.#bigTripApiService = bigTripApiService;
+    this.#eventsApiService = eventsApiService;
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
   }
 
-  // Получить все события
+  //Не совсем понимаю, правильно ли сделать так, или get events()
   get() {
     return this.#events;
   }
 
-  // Инициализация модели, загрузка данных с сервера
   async init() {
     try {
-      // Ждем чтобы все события успешно завершились
       await Promise.all([
         this.#destinationsModel.init(),
         this.#offersModel.init()
       ]);
 
-      const events = await this.#bigTripApiService.events;
+      const events = await this.#eventsApiService.events;
       this.#events = events.map(EventAdapter.adaptToClient);
-      this._notify(UpdateType.INIT, {isError: false});
-    } catch(err) {
+      this._notify(UpdateType.INIT, { isError: false });
+    } catch (err) {
       this.#events = [];
-      this._notify(UpdateType.INIT, {isError: true});
+      this._notify(UpdateType.INIT, { isError: true });
     }
   }
 
-  // Обновить событие
   async updateEvent(updateType, update) {
     try {
-      const response = await this.#bigTripApiService.updateEvent(update);
+      const response = await this.#eventsApiService.updateEvent(update);
       const updatedEvent = EventAdapter.adaptToClient(response);
+
+      // Update the local events array with the updated event
       this.#events = this._updateItemById(this.#events, updatedEvent);
       this._notify(updateType, updatedEvent);
-    } catch(err) {
-      throw new Error('Не удалось обновить событие');
+    } catch (err) {
+      throw new Error('Can\'t update event');
     }
   }
 
-  // Добавить новое событие
   async addEvent(updateType, update) {
     try {
-      const response = await this.#bigTripApiService.addEvent(update);
+      const response = await this.#eventsApiService.addEvent(update);
       const newEvent = EventAdapter.adaptToClient(response);
+
       this.#events.push(newEvent);
       this._notify(updateType, newEvent);
-    } catch(err) {
-      throw new Error('Не удалось добавить событие');
+    } catch (err) {
+      throw new Error('Can\'t add event');
     }
   }
 
-  // Удалить событие
   async deleteEvent(updateType, update) {
     try {
-      await this.#bigTripApiService.deleteEvent(update);
+      await this.#eventsApiService.deleteEvent(update);
+
+      // Remove the deleted event from the local events array
       this.#events = this.#events.filter((eventItem) => eventItem.id !== update.id);
-      //todo проверить что null ничего не ломает
-      this._notify(updateType, null);
-    } catch(err) {
-      throw new Error('Не удалось удалить событие');
+      this._notify(updateType);
+    } catch (err) {
+      throw new Error('Can\'t delete event');
     }
   }
 

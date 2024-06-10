@@ -1,5 +1,5 @@
 import { remove, render, RenderPosition } from '../framework/render.js';
-import EventEditView from '../view/edit-event-view.js';
+import EditEventView from '../view/edit-event-view.js';
 import { UserAction, UpdateType, EditType } from '../const.js';
 import { isEscapeKeyPressed } from '../utils/base.js';
 
@@ -25,7 +25,7 @@ export default class NewEventPresenter {
       return;
     }
 
-    this.#eventEditComponent = new EventEditView({
+    this.#eventEditComponent = new EditEventView({
       eventDestination: this.#destinationsModel.get(),
       eventOffers: this.#offersModel.get(),
       onEditSubmit: this.#handleEditSubmit,

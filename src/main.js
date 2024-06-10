@@ -8,13 +8,14 @@ import OffersModel from './models/offers-model.js';
 import EventsModel from './models/events-model.js';
 import FilterModel from './models/filter-model.js';
 
-const AUTHORIZATION = 'Basic 74fnvhvfd343fddgfdfg';
-const END_EVENT = 'https://21.objects.htmlacademy.pro/big-trip';
+//Думаю стоит вынести это в .env, но побоялся это делать т.к не было указано в тз
+const AUTH = 'Basic 74fnvhvfd343fddgfdfg';
+const API_BASE_URL = 'https://21.objects.htmlacademy.pro/big-trip';
 
 const tripMainContainer = document.querySelector('.trip-main');
 const filterContainer = document.querySelector('.trip-controls__filters');
 const tripEventsContainer = document.querySelector('.trip-events');
-const eventsApiService = new EventsApiService(END_EVENT, AUTHORIZATION);
+const eventsApiService = new EventsApiService(API_BASE_URL, AUTH);
 const filterModel = new FilterModel();
 const destinationsModel = new DestinationsModel(eventsApiService);
 const offersModel = new OffersModel(eventsApiService);

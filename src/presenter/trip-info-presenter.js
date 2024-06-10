@@ -1,46 +1,39 @@
-// Importing necessary functions from the framework
 import { render, remove, RenderPosition } from '../framework/render.js';
 import TripInfoView from '../view/trip-info-view.js';
 
 export default class TripInfoPresenter {
+  #events = null;
   #tripInfoComponent = null;
-  #container = null;
+  #tripInfoContainer = null;
+  #destinationsModel = null;
+  #offersModel = null;
+  #destinations = null;
+  #offers = null;
 
-  // Models and events are now part of the state for easier tracking and initialization
-  #state = {
-    events: [],
-    destinations: [],
-    offers: []
-  };
-
-  // Initialize presenter with dependencies
-  constructor({ container, destinationsModel, offersModel }) {
-    this.#container = container;
-    this.#state.destinations = destinationsModel.get();
-    this.#state.offers = offersModel.get();
+  constructor({ tripInfoContainer, destinationsModel, offersModel }) {
+    this.#tripInfoContainer = tripInfoContainer;
+    this.#destinationsModel = destinationsModel;
+    this.#offersModel = offersModel;
   }
 
-  // Initialize the component with given events
   init(events) {
-    this.#state.events = events;
+    this.#events = events;
+    this.#destinations = [...this.#destinationsModel.get()];
+    this.#offers = [...this.#offersModel.get()];
 
+    // Create a new TripInfoView component with the provided data
     this.#tripInfoComponent = new TripInfoView({
-      destinations: this.#state.destinations,
-      offers: this.#state.offers,
-      events: this.#state.events
+      destinations: this.#destinations,
+      offers: this.#offers,
+      events: this.#events
     });
 
-    // Using a more precise method name for clarity
-    this.#renderTripInfo();
+    // Render the TripInfoView component in the specified container
+    render(this.#tripInfoComponent, this.#tripInfoContainer, RenderPosition.AFTERBEGIN);
   }
 
-  // Handles the rendering of the TripInfoView component
-  #renderTripInfo() {
-    render(this.#tripInfoComponent, this.#container, RenderPosition.AFTERBEGIN);
-  }
-
-  // Cleanup resources and UI components
   destroy() {
+    // Remove the TripInfoView component from the DOM
     remove(this.#tripInfoComponent);
   }
 }

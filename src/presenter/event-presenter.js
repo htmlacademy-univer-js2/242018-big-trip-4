@@ -1,6 +1,6 @@
 import { render, replace, remove } from '../framework/render.js';
 import EventView from '../view/event-view.js';
-import EditEventView from '../view/edit-event-view.js';
+import EditEventView from '../view/edit-event-view';
 import { UserAction, UpdateType, Mode } from '../const.js';
 import { isBigDifference } from '../utils/event.js';
 import {isEscapeKeyPressed} from '../utils/base';
